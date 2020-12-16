@@ -50,6 +50,14 @@ class MouseHandler():
             if self.position[1] > rect.topleft[1] and self.position[1] < rect.bottomleft[1]:
                 return True
     
+    def right_click(self, grid):
+        for row in grid:
+            for cell in row:
+                if self.__click(cell.rect):
+                    cell.image.fill(pygame.color.THECOLORS["white"])
+                    cell.color = pygame.color.THECOLORS["white"]
+                    cell.state = CellState["CLEAR"]
+
     def left_click(self, grid, buttons):
         #check for painting
         #refactor this nightmare later

@@ -45,7 +45,7 @@ while run:
             mouse.left_click(grid, buttons)
         #right click
         if pygame.mouse.get_pressed()[2]:
-            print("yaay")
+            mouse.right_click(grid)
     
     #drawing goes below here
     #draw cell grid
