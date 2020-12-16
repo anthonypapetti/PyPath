@@ -1,6 +1,7 @@
 import pygame
 from buttonfunc import *
 from elements import Button, Cell
+from enums import CellState, color_array
 
 def buttonConstructor():
     UIfont = pygame.font.SysFont("arial", 30)
@@ -22,4 +23,9 @@ def gridConstructor(cellsize):
         yptr += 5
         xptr = 0
         grid.append(row)
+    #default start/ends
+    grid[0][0].image.fill(color_array[CellState(3)])
+    grid[0][0].state = CellState(3)
+    grid[-1][-1].image.fill(color_array[CellState(4)])
+    grid[-1][-1].state = CellState(4)
     return grid
