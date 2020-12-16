@@ -1,6 +1,6 @@
 import pygame
 from buttonfunc import *
-from elements import Button
+from elements import Button, Cell
 
 def buttonConstructor():
     UIfont = pygame.font.SysFont("arial", 30)
@@ -9,3 +9,17 @@ def buttonConstructor():
         Button("End", UIfont, 200, 600, endfunc),
         Button("Forest", UIfont, 270, 600, forestfunc),
         Button("Start", UIfont, 600, 600, placeholder)]
+
+def gridConstructor(cellsize):
+    grid = []
+    xptr = 0
+    yptr = 0
+    for i in range(cellsize[1]):
+        row = []
+        for j in range(cellsize[0]):
+            row.append(Cell(xptr, yptr))
+            xptr += 5
+        yptr += 5
+        xptr = 0
+        grid.append(row)
+    return grid

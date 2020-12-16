@@ -1,7 +1,6 @@
 import pygame
 from pygame.locals import *
-from elements import *
-from buttonfunc import *
+from elements import Border, MouseHandler
 from constructors import *
 
 #initialize pygame
@@ -20,17 +19,7 @@ buttons = buttonConstructor()
 border = Border(0, 550)
 
 #intialize cell grid
-grid = []
-xptr = 0
-yptr = 0
-for i in range(cellsize[1]):
-    row = []
-    for j in range(cellsize[0]):
-        row.append(Cell(xptr, yptr))
-        xptr += 5
-    yptr += 5
-    xptr = 0
-    grid.append(row)
+grid = gridConstructor(cellsize)
 
 pygame.display.update()
 #main loop

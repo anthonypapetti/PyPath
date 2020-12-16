@@ -15,6 +15,3 @@ def endfunc():
 
 def forestfunc():
     return CellState["FOREST"]
-
-def wallfunc():
-    return CellState["WALL"]

@@ -1,11 +1,10 @@
 import pygame
-from enums import CellState
+from enums import CellState, color_array
 
 class Cell():
     def __init__(self, posx, posy):
         self.image = pygame.Surface((5, 5))
         self.image.fill((255, 255, 255))
-        self.color = (255, 255, 255)
         self.rect = self.image.get_rect()
         self.rect.x = posx
         self.rect.y = posy
@@ -60,26 +59,30 @@ class MouseHandler():
 
     def left_click(self, grid, buttons):
         #check for painting
-        #refactor this nightmare later
+        #refactor this nightmare NOW
         for row in grid:
             for cell in row:
                 if self.__click(cell.rect):
-                    if self.state == CellState["WALL"]:
-                        cell.image.fill(pygame.color.THECOLORS["black"])
-                        cell.color = pygame.color.THECOLORS["black"]
-                        cell.state = CellState["WALL"]
-                    if self.state == CellState["FOREST"]:
-                        cell.image.fill(pygame.color.THECOLORS["green"])
-                        cell.color = pygame.color.THECOLORS["green"]
-                        cell.state = CellState["FOREST"]
-                    if self.state == CellState["START"]:
-                        cell.image.fill(pygame.color.THECOLORS["red"])
-                        cell.color = pygame.color.THECOLORS["red"]
-                        cell.state = CellState["START"]
-                    if self.state == CellState["END"]:
-                        cell.image.fill(pygame.color.THECOLORS["blue"])
-                        cell.color = pygame.color.THECOLORS["blue"]
-                        cell.state = CellState["END"]
+                    #painting walls/forest
+                    if self.state < 3:
+                        for state in list(map(int, CellState))[1:3]:
+                            if state == self.state:
+                                cell.image.fill(color_array[CellState(state)])
+                                cell.state = CellState(state)
+                    #changing position of start/end
+                    if self.state >= 3:
+                        for state in list(map(int, CellState))[3:]:
+                            if state == self.state:
+                                #get rid of old start/end
+                                for searchrow in grid:
+                                    for searchcell in searchrow:
+                                        if searchcell.state == self.state:
+                                            searchcell.image.fill(color_array[0])
+                                            searchcell.state = CellState["CLEAR"]
+                                #add new start/end
+                                cell.image.fill(color_array[CellState(state)])
+                                cell.state = CellState(state)
+                                
         #check for buttons
         for button in buttons:
             if self.__click(button.rect):
