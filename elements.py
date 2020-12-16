@@ -1,4 +1,5 @@
 import pygame
+from enums import CellState
 
 class Cell():
     def __init__(self, posx, posy):
@@ -8,6 +9,7 @@ class Cell():
         self.rect = self.image.get_rect()
         self.rect.x = posx
         self.rect.y = posy
+        self.state = CellState["CLEAR"]
 
     #draws onto screen
     def Draw(self, surface):
@@ -40,7 +42,7 @@ class Button():
 class MouseHandler():
     def __init__(self):
         self.position = pygame.mouse.get_pos()
-        self.state = "WALL"
+        self.state = CellState["WALL"]
     
     #checks for clicks
     def __click(self, rect):
@@ -49,9 +51,28 @@ class MouseHandler():
                 return True
     
     def left_click(self, grid, buttons):
+        #check for painting
+        #refactor this nightmare later
         for row in grid:
             for cell in row:
                 if self.__click(cell.rect):
-                    if self.state == "WALL":
+                    if self.state == CellState["WALL"]:
                         cell.image.fill(pygame.color.THECOLORS["black"])
                         cell.color = pygame.color.THECOLORS["black"]
+                        cell.state = CellState["WALL"]
+                    if self.state == CellState["FOREST"]:
+                        cell.image.fill(pygame.color.THECOLORS["green"])
+                        cell.color = pygame.color.THECOLORS["green"]
+                        cell.state = CellState["FOREST"]
+                    if self.state == CellState["START"]:
+                        cell.image.fill(pygame.color.THECOLORS["red"])
+                        cell.color = pygame.color.THECOLORS["red"]
+                        cell.state = CellState["START"]
+                    if self.state == CellState["END"]:
+                        cell.image.fill(pygame.color.THECOLORS["blue"])
+                        cell.color = pygame.color.THECOLORS["blue"]
+                        cell.state = CellState["END"]
+        #check for buttons
+        for button in buttons:
+            if self.__click(button.rect):
+                self.state = button.onclick()

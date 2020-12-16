@@ -2,6 +2,7 @@ import pygame
 from pygame.locals import *
 from elements import *
 from buttonfunc import *
+from constructors import *
 
 #initialize pygame
 pygame.init()
@@ -15,8 +16,7 @@ screen.fill(pygame.color.THECOLORS["white"])
 mouse = MouseHandler()
 
 #initalize buttons/UI
-UIfont = pygame.font.SysFont("arial", 30)
-buttons = [Button("Wall", UIfont, 50, 600, placeholder), Button("Start", UIfont, 120, 600, placeholder), Button("End", UIfont, 200, 600, placeholder), Button("Forest", UIfont, 270, 600, placeholder), Button("Start", UIfont, 600, 600, placeholder)]
+buttons = buttonConstructor()
 border = Border(0, 550)
 
 #intialize cell grid
