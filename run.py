@@ -16,12 +16,13 @@ mouse = MouseHandler()
 
 #initalize buttons/UI
 buttons = buttonConstructor()
+UIfont = pygame.font.SysFont("arial", 30)
+MapText = UIfont.render("Create Map:", True, (0, 0, 0))
+VisText = UIfont.render("Visualisation:", True, (0, 0, 0))
 border = Border(0, 550)
 
 #intialize cell grid
 grid = gridConstructor(cellsize)
-print(len(grid))
-print(len(grid[0]))
 
 pygame.display.update()
 #main loop
@@ -48,6 +49,10 @@ while run:
     #draw buttons
     for button in buttons:
         button.Draw(screen)
+    
+    #draw text
+    screen.blit(MapText, (125, 560))
+    screen.blit(VisText, (650, 560))
     
     #update display
     pygame.display.update()
