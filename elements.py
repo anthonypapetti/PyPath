@@ -59,7 +59,6 @@ class MouseHandler():
 
     def left_click(self, grid, buttons):
         #check for painting
-        #refactor this nightmare NOW
         for row in grid:
             for cell in row:
                 if self.__click(cell.rect):
@@ -70,7 +69,7 @@ class MouseHandler():
                                 cell.image.fill(color_array[CellState(state)])
                                 cell.state = CellState(state)
                     #changing position of start/end
-                    if self.state >= 3:
+                    if self.state >= 3 and self.state <= 4:
                         for state in list(map(int, CellState))[3:]:
                             if state == self.state:
                                 #get rid of old start/end

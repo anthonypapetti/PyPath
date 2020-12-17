@@ -9,7 +9,11 @@ def buttonConstructor():
         Button("Start", UIfont, 120, 620, startfunc),
         Button("End", UIfont, 200, 620, endfunc),
         Button("Forest", UIfont, 270, 620, forestfunc),
-        Button("Start", UIfont, 700, 620, placeholder)]
+        Button("Breadth", UIfont, 550, 620, breadthbutton),
+        Button("DJ", UIfont, 675, 620, djbutton),
+        Button("Greedy", UIfont, 725, 620, greedybutton),
+        Button("A*", UIfont, 850, 620, astarbutton),
+        ]
 
 def gridConstructor(cellsize):
     grid = []

@@ -2,6 +2,7 @@ import pygame
 from pygame.locals import *
 from elements import Border, MouseHandler
 from constructors import *
+from pathfinding import pathfinding
 
 #initialize pygame
 pygame.init()
@@ -39,6 +40,10 @@ while run:
         if pygame.mouse.get_pressed()[2]:
             mouse.right_click(grid)
     
+    #start visualisation
+    if mouse.state >= 10:
+        pathfinding(mouse, grid)
+
     #drawing goes below here
     #draw cell grid
     for row in grid:
