@@ -43,6 +43,7 @@ while run:
     #start visualisation
     if mouse.state >= 10:
         pathfinding(mouse, grid)
+        mouse.state = 1
 
     #drawing goes below here
     #draw cell grid
