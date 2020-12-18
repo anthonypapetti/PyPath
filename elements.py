@@ -13,6 +13,11 @@ class Cell():
     #draws onto screen
     def Draw(self, surface):
         surface.blit(self.image, self.rect)
+    
+    #take in a CellState and sets state and fills with color
+    def set_state(self, state):
+        self.state = state
+        self.image.fill(color_array[state])
 
 class Border():
     def __init__(self, posx, posy):
@@ -66,8 +71,7 @@ class MouseHandler():
                     if self.state < 3:
                         for state in list(map(int, CellState))[1:3]:
                             if state == self.state:
-                                cell.image.fill(color_array[CellState(state)])
-                                cell.state = CellState(state)
+                                cell.set_state(state)
                     #changing position of start/end
                     if self.state >= 3 and self.state <= 4:
                         for state in list(map(int, CellState))[3:]:
@@ -76,8 +80,7 @@ class MouseHandler():
                                 for searchrow in grid:
                                     for searchcell in searchrow:
                                         if searchcell.state == self.state:
-                                            searchcell.image.fill(color_array[0])
-                                            searchcell.state = CellState["CLEAR"]
+                                            searchcell.set_state(CellState["CLEAR"])
                                 #add new start/end
                                 cell.image.fill(color_array[CellState(state)])
                                 cell.state = CellState(state)

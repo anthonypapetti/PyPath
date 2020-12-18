@@ -24,6 +24,8 @@ border = Border(0, 550)
 
 #intialize cell grid
 grid = gridConstructor(cellsize)
+print(len(grid))
+print(len(grid[0]))
 
 pygame.display.update()
 #main loop

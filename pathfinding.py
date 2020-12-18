@@ -1,7 +1,13 @@
-from enums import CellState
+from enums import CellState, color_array
 from queue import Queue
 
 def pathfinding(mouse, grid):
+    #clear grid
+    for row in grid:
+        for cell in row:
+            if cell.state >=5:
+                cell.state = CellState["CLEAR"]
+                cell.image.fill(color_array[CellState["CLEAR"]])
     #find start and endpoint
     for i in range(len(grid)):
         for j in range(len(grid[i])):
@@ -12,7 +18,7 @@ def pathfinding(mouse, grid):
 
     #pipe it into one of the algorithms
     if mouse.state == CellState["BREADTH"]:
-        print(__breadthsearch(grid, start, goal))
+        __breadthsearch(grid, start, goal)
     if mouse.state == CellState["DJ_ALGO"]:
         __djsearch(grid, start, goal)
     if mouse.state == CellState["GREEDY"]:
@@ -24,6 +30,12 @@ def __neighbors(grid, current):
     possible_neighbors = [[0, 1], [0, -1], [1, 0], [-1, 0]]
     neighbors = []
     for neighbor in possible_neighbors:
+        #bounds detection
+        if current[0] + neighbor[0] < 0 or current[0] + neighbor[0] > 109:
+            continue
+        if current[1] + neighbor[1] < 0 or current[1] + neighbor[1] > 199:
+            continue
+        #if wall
         if grid[current[0] + neighbor[0]][current[1] + neighbor[1]].state != CellState["WALL"]:
             neighbors.append([current[0] + neighbor[0], current[1] + neighbor[1]])
     
@@ -51,13 +63,21 @@ def __breadthsearch(grid, start, goal):
         #early exit condition
         if current == goal:
             break
+        #color reached cell
+        if grid[current[0]][current[1]].state != CellState["START"] and grid[current[0]][current[1]].state != CellState["END"]:
+            grid[current[0]][current[1]].set_state(CellState["REACHED"])
 
         for neighbor in __neighbors(grid, current):
             if str(neighbor) not in came_from:
+                #put in frontier
                 frontier.put(neighbor)
+                #color frontier
+                if grid[neighbor[0]][neighbor[1]].state != CellState["START"] and grid[neighbor[0]][neighbor[1]].state != CellState["END"]:
+                    grid[neighbor[0]][neighbor[1]].set_state(CellState["FRONTIER"])
+                #put in came from
                 came_from[str(neighbor)] = current
     
-    #TODO: RECONSTRUCT PATH
+    #reconstruct path
     current = goal
     path = []
     while current != start:
@@ -65,6 +85,10 @@ def __breadthsearch(grid, start, goal):
         current = came_from[str(current)]
     path.append(start)
     path.reverse()
+    #color path
+    for index in path:
+        if grid[index[0]][index[1]].state != CellState["START"] and grid[index[0]][index[1]].state != CellState["END"]:
+            grid[index[0]][index[1]].set_state(CellState["PATH"])
     return path
 
 def __djsearch(grid, start, goal):

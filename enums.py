@@ -12,6 +12,7 @@ class CellState(enum.IntEnum):
     PATH = 7
 
     #below are states for triggering visualisation functions
+    #these are all mouse only
     #this is disgusting, but it'll have to do for now
     BREADTH = 10
     DJ_ALGO = 11
