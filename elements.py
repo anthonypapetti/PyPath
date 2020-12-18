@@ -63,6 +63,12 @@ class MouseHandler():
                     cell.state = CellState["CLEAR"]
 
     def left_click(self, grid, buttons):
+        #check for grid clear
+        if self.state == CellState["SEARCH_FINISHED"]:
+            for row in grid:
+                for cell in row:
+                    if cell.state >=5:
+                        cell.set_state(CellState["CLEAR"])
         #check for painting
         for row in grid:
             for cell in row:

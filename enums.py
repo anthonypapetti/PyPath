@@ -14,10 +14,12 @@ class CellState(enum.IntEnum):
     #below are states for triggering visualisation functions
     #these are all mouse only
     #this is disgusting, but it'll have to do for now
+    SEARCH_FINISHED = 9
     BREADTH = 10
     DJ_ALGO = 11
     GREEDY = 12
     ASTAR = 13
+    
 
 color_array = [
     pygame.color.THECOLORS["white"],

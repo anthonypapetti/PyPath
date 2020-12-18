@@ -1,13 +1,14 @@
 from enums import CellState, color_array
 from queue import Queue
+from time import sleep
+import pygame
 
 def pathfinding(mouse, grid):
     #clear grid
     for row in grid:
         for cell in row:
             if cell.state >=5:
-                cell.state = CellState["CLEAR"]
-                cell.image.fill(color_array[CellState["CLEAR"]])
+                cell.set_state(CellState["CLEAR"])
     #find start and endpoint
     for i in range(len(grid)):
         for j in range(len(grid[i])):
