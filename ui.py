@@ -1,23 +1,5 @@
 import pygame
-from enums import CellState, color_array
-
-class Cell():
-    def __init__(self, posx, posy):
-        self.image = pygame.Surface((5, 5))
-        self.image.fill((255, 255, 255))
-        self.rect = self.image.get_rect()
-        self.rect.x = posx
-        self.rect.y = posy
-        self.state = CellState["CLEAR"]
-
-    #draws onto screen
-    def Draw(self, surface):
-        surface.blit(self.image, self.rect)
-    
-    #take in a CellState and sets state and fills with color
-    def set_state(self, state):
-        self.state = state
-        self.image.fill(color_array[state])
+from enums import *
 
 class Border():
     def __init__(self, posx, posy):

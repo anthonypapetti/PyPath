@@ -1,6 +1,7 @@
 import pygame
 from pygame.locals import *
-from elements import Border, MouseHandler
+from grid import Grid
+from ui import *
 from constructors import *
 from pathfinding import pathfinding
 
@@ -23,9 +24,9 @@ VisText = UIfont.render("Visualisation:", True, (0, 0, 0))
 border = Border(0, 550)
 
 #intialize cell grid
-grid = gridConstructor(cellsize)
-print(len(grid))
-print(len(grid[0]))
+grid = Grid(cellsize)
+print(len(grid.cells))
+print(len(grid.cells[0]))
 
 pygame.display.update()
 #main loop
@@ -37,10 +38,10 @@ while run:
             run = False
         #left click
         if pygame.mouse.get_pressed()[0]:
-            mouse.left_click(grid, buttons)
+            mouse.left_click(grid.cells, buttons)
         #right click
         if pygame.mouse.get_pressed()[2]:
-            mouse.right_click(grid)
+            mouse.right_click(grid.cells)
     
     #start visualisation
     if mouse.state >= 10:
@@ -49,7 +50,7 @@ while run:
 
     #drawing goes below here
     #draw cell grid
-    for row in grid:
+    for row in grid.cells:
         for cell in row:
             cell.Draw(screen)
     border.Draw(screen)

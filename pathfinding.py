@@ -14,16 +14,16 @@ class PriorityIndex:
 
 def pathfinding(mouse, grid):
     #clear grid
-    for row in grid:
+    for row in grid.cells:
         for cell in row:
             if cell.state >=5:
                 cell.set_state(CellState["CLEAR"])
     #find start and endpoint
-    for i in range(len(grid)):
-        for j in range(len(grid[i])):
-            if grid[i][j].state == CellState["START"]:
+    for i in range(len(grid.cells)):
+        for j in range(len(grid.cells[i])):
+            if grid.cells[i][j].state == CellState["START"]:
                 start = [i, j]
-            if grid[i][j].state == CellState["END"]:
+            if grid.cells[i][j].state == CellState["END"]:
                 goal = [i, j]
 
     #pipe it into one of the algorithms
@@ -35,27 +35,6 @@ def pathfinding(mouse, grid):
         __greedysearch(grid, start, goal)
     if mouse.state == CellState["ASTAR"]:
         __astarsearch(grid, start, goal)
-
-def __cost(grid, index):
-    if grid[index[0]][index[1]].state == CellState["FOREST"]:
-        return 4
-    else:
-        return 1
-
-def __neighbors(grid, current):
-    possible_neighbors = [[0, 1], [0, -1], [1, 0], [-1, 0]]
-    neighbors = []
-    for neighbor in possible_neighbors:
-        #bounds detection
-        if current[0] + neighbor[0] < 0 or current[0] + neighbor[0] > 109:
-            continue
-        if current[1] + neighbor[1] < 0 or current[1] + neighbor[1] > 199:
-            continue
-        #if wall
-        if grid[current[0] + neighbor[0]][current[1] + neighbor[1]].state != CellState["WALL"]:
-            neighbors.append([current[0] + neighbor[0], current[1] + neighbor[1]])
-    
-    return neighbors
 
 def __breadthsearch(grid, start, goal):
     #init data structures
@@ -73,16 +52,16 @@ def __breadthsearch(grid, start, goal):
         if current == goal:
             break
         #color reached cell
-        if grid[current[0]][current[1]].state != CellState["START"] and grid[current[0]][current[1]].state != CellState["END"]:
-            grid[current[0]][current[1]].set_state(CellState["REACHED"])
+        if grid.cells[current[0]][current[1]].state != CellState["START"] and grid.cells[current[0]][current[1]].state != CellState["END"]:
+            grid.cells[current[0]][current[1]].set_state(CellState["REACHED"])
 
-        for neighbor in __neighbors(grid, current):
+        for neighbor in grid.neighbors(current):
             if str(neighbor) not in came_from:
                 #put in frontier
                 frontier.put(neighbor)
                 #color frontier
-                if grid[neighbor[0]][neighbor[1]].state != CellState["START"] and grid[neighbor[0]][neighbor[1]].state != CellState["END"]:
-                    grid[neighbor[0]][neighbor[1]].set_state(CellState["FRONTIER"])
+                if grid.cells[neighbor[0]][neighbor[1]].state != CellState["START"] and grid.cells[neighbor[0]][neighbor[1]].state != CellState["END"]:
+                    grid.cells[neighbor[0]][neighbor[1]].set_state(CellState["FRONTIER"])
                 #put in came from
                 came_from[str(neighbor)] = current
     
@@ -96,8 +75,8 @@ def __breadthsearch(grid, start, goal):
     path.reverse()
     #color path
     for index in path:
-        if grid[index[0]][index[1]].state != CellState["START"] and grid[index[0]][index[1]].state != CellState["END"]:
-            grid[index[0]][index[1]].set_state(CellState["PATH"])
+        if grid.cells[index[0]][index[1]].state != CellState["START"] and grid.cells[index[0]][index[1]].state != CellState["END"]:
+            grid.cells[index[0]][index[1]].set_state(CellState["PATH"])
     return path
 
 def __djsearch(grid, start, goal):
@@ -118,17 +97,17 @@ def __djsearch(grid, start, goal):
             break
         
         #color reached cell
-        if grid[current[0]][current[1]].state != CellState["START"] and grid[current[0]][current[1]].state != CellState["END"]:
-            grid[current[0]][current[1]].set_state(CellState["REACHED"])
+        if grid.cells[current[0]][current[1]].state != CellState["START"] and grid.cells[current[0]][current[1]].state != CellState["END"]:
+            grid.cells[current[0]][current[1]].set_state(CellState["REACHED"])
 
-        for neighbor in __neighbors(grid, current):
-            new_cost = cost_so_far[str(current)] + __cost(grid, neighbor)
+        for neighbor in grid.neighbors(current):
+            new_cost = cost_so_far[str(current)] + grid.cost(neighbor)
             if str(neighbor) not in cost_so_far or new_cost < cost_so_far[str(neighbor)]:
                 #add to frontier
                 frontier.put(PriorityIndex(new_cost, neighbor))
                 #color frontier
-                if grid[neighbor[0]][neighbor[1]].state != CellState["START"] and grid[neighbor[0]][neighbor[1]].state != CellState["END"]:
-                    grid[neighbor[0]][neighbor[1]].set_state(CellState["FRONTIER"])
+                if grid.cells[neighbor[0]][neighbor[1]].state != CellState["START"] and grid.cells[neighbor[0]][neighbor[1]].state != CellState["END"]:
+                    grid.cells[neighbor[0]][neighbor[1]].set_state(CellState["FRONTIER"])
                 #put in reference dictionaries
                 cost_so_far[str(neighbor)] = new_cost
                 came_from[str(neighbor)] = current
@@ -142,8 +121,8 @@ def __djsearch(grid, start, goal):
     path.append(start)
     path.reverse()
     for index in path:
-        if grid[index[0]][index[1]].state != CellState["START"] and grid[index[0]][index[1]].state != CellState["END"]:
-            grid[index[0]][index[1]].set_state(CellState["PATH"])
+        if grid.cells[index[0]][index[1]].state != CellState["START"] and grid.cells[index[0]][index[1]].state != CellState["END"]:
+            grid.cells[index[0]][index[1]].set_state(CellState["PATH"])
     return path
 
 def __greedysearch(grid, start, goal):
