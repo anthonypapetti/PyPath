@@ -40,9 +40,8 @@ class MouseHandler():
         for row in grid:
             for cell in row:
                 if self.__click(cell.rect):
-                    cell.image.fill(pygame.color.THECOLORS["white"])
-                    cell.color = pygame.color.THECOLORS["white"]
-                    cell.state = CellState["CLEAR"]
+                    if cell.state not in [CellState["START"], CellState["END"]]:
+                        cell.set_state(CellState["CLEAR"])
 
     def left_click(self, grid, buttons):
         #check for grid clear
@@ -56,22 +55,18 @@ class MouseHandler():
             for cell in row:
                 if self.__click(cell.rect):
                     #painting walls/forest
-                    if self.state < 3:
-                        for state in list(map(int, CellState))[1:3]:
-                            if state == self.state:
-                                cell.set_state(state)
+                    if self.state in [1, 2]:
+                        if cell.state not in [3, 4]:
+                            cell.set_state(self.state)
                     #changing position of start/end
-                    if self.state >= 3 and self.state <= 4:
-                        for state in list(map(int, CellState))[3:]:
-                            if state == self.state:
-                                #get rid of old start/end
-                                for searchrow in grid:
-                                    for searchcell in searchrow:
-                                        if searchcell.state == self.state:
-                                            searchcell.set_state(CellState["CLEAR"])
-                                #add new start/end
-                                cell.image.fill(color_array[CellState(state)])
-                                cell.state = CellState(state)
+                    if self.state in [3, 4]:
+                        #get rid of old start/end
+                        for searchrow in grid:
+                            for searchcell in searchrow:
+                                if searchcell.state == self.state:
+                                    searchcell.set_state(CellState["CLEAR"])
+                        #add new start/end
+                        cell.set_state(self.state)
                                 
         #check for buttons
         for button in buttons:

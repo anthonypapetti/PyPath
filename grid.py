@@ -43,6 +43,11 @@ class Grid():
                 neighbors.append([index[0] + neighbor[0], index[1] + neighbor[1]])
         
         return neighbors
+    
+    #sets the state of a cell at an index
+    def path_state(self, index, state):
+        if self.cells[index[0]][index[1]].state != CellState["START"] and self.cells[index[0]][index[1]].state != CellState["END"]:
+            self.cells[index[0]][index[1]].set_state(state)
 
 class Cell():
     def __init__(self, posx, posy):

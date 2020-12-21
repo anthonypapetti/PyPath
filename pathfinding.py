@@ -52,16 +52,14 @@ def __breadthsearch(grid, start, goal):
         if current == goal:
             break
         #color reached cell
-        if grid.cells[current[0]][current[1]].state != CellState["START"] and grid.cells[current[0]][current[1]].state != CellState["END"]:
-            grid.cells[current[0]][current[1]].set_state(CellState["REACHED"])
+        grid.path_state(current, CellState["REACHED"])
 
         for neighbor in grid.neighbors(current):
             if str(neighbor) not in came_from:
                 #put in frontier
                 frontier.put(neighbor)
                 #color frontier
-                if grid.cells[neighbor[0]][neighbor[1]].state != CellState["START"] and grid.cells[neighbor[0]][neighbor[1]].state != CellState["END"]:
-                    grid.cells[neighbor[0]][neighbor[1]].set_state(CellState["FRONTIER"])
+                grid.path_state(neighbor, CellState["FRONTIER"])
                 #put in came from
                 came_from[str(neighbor)] = current
     
@@ -75,12 +73,10 @@ def __breadthsearch(grid, start, goal):
     path.reverse()
     #color path
     for index in path:
-        if grid.cells[index[0]][index[1]].state != CellState["START"] and grid.cells[index[0]][index[1]].state != CellState["END"]:
-            grid.cells[index[0]][index[1]].set_state(CellState["PATH"])
+        grid.path_state(index, CellState["PATH"])
     return path
 
 def __djsearch(grid, start, goal):
-    #BUG: PriorityQueue is sorting by x value, need dataclasses
     frontier = PriorityQueue()
     came_from = dict()
     cost_so_far = dict()
