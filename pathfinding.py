@@ -1,7 +1,16 @@
 from enums import CellState, color_array
-from queue import Queue
+from queue import Queue, PriorityQueue
 from time import sleep
 import pygame
+from dataclasses import dataclass, field
+
+@dataclass
+class PriorityIndex:
+    priority: int
+    index: list() = field(compare=False)
+
+    def __lt__(self, other):
+        return self.priority < other.priority
 
 def pathfinding(mouse, grid):
     #clear grid
@@ -27,6 +36,12 @@ def pathfinding(mouse, grid):
     if mouse.state == CellState["ASTAR"]:
         __astarsearch(grid, start, goal)
 
+def __cost(grid, index):
+    if grid[index[0]][index[1]].state == CellState["FOREST"]:
+        return 4
+    else:
+        return 1
+
 def __neighbors(grid, current):
     possible_neighbors = [[0, 1], [0, -1], [1, 0], [-1, 0]]
     neighbors = []
@@ -42,16 +57,9 @@ def __neighbors(grid, current):
     
     return neighbors
 
-    # return [[current[0] + 1, current[1]],
-    #     [current[0] - 1, current[1]],
-    #     [current[0], current[1] + 1],
-    #     [current[0], current[1] - 1]
-    # ]
-
 def __breadthsearch(grid, start, goal):
     #init data structures
     #ALWAYS USE INDEXES! NEVER THE ACTUAL CELLS
-    #TODO: VISUALISE (do this last)
     frontier = Queue()
     came_from = dict()
     frontier.put(start)
@@ -93,7 +101,50 @@ def __breadthsearch(grid, start, goal):
     return path
 
 def __djsearch(grid, start, goal):
-    pass
+    #BUG: PriorityQueue is sorting by x value, need dataclasses
+    frontier = PriorityQueue()
+    came_from = dict()
+    cost_so_far = dict()
+    frontier.put(PriorityIndex(0, start))
+    came_from[str(start)] = None
+    cost_so_far[str(start)] = 0
+
+    #main loop
+    while not frontier.empty():
+        current = frontier.get().index
+
+        #early exit condition
+        if current == goal:
+            break
+        
+        #color reached cell
+        if grid[current[0]][current[1]].state != CellState["START"] and grid[current[0]][current[1]].state != CellState["END"]:
+            grid[current[0]][current[1]].set_state(CellState["REACHED"])
+
+        for neighbor in __neighbors(grid, current):
+            new_cost = cost_so_far[str(current)] + __cost(grid, neighbor)
+            if str(neighbor) not in cost_so_far or new_cost < cost_so_far[str(neighbor)]:
+                #add to frontier
+                frontier.put(PriorityIndex(new_cost, neighbor))
+                #color frontier
+                if grid[neighbor[0]][neighbor[1]].state != CellState["START"] and grid[neighbor[0]][neighbor[1]].state != CellState["END"]:
+                    grid[neighbor[0]][neighbor[1]].set_state(CellState["FRONTIER"])
+                #put in reference dictionaries
+                cost_so_far[str(neighbor)] = new_cost
+                came_from[str(neighbor)] = current
+    
+    #reconstruct path
+    current = goal
+    path = []
+    while current != start:
+        path.append(list(current))
+        current = came_from[str(current)]
+    path.append(start)
+    path.reverse()
+    for index in path:
+        if grid[index[0]][index[1]].state != CellState["START"] and grid[index[0]][index[1]].state != CellState["END"]:
+            grid[index[0]][index[1]].set_state(CellState["PATH"])
+    return path
 
 def __greedysearch(grid, start, goal):
     pass
