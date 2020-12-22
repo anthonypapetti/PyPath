@@ -9,6 +9,7 @@ def buttonConstructor():
         Button("Start", UIfont, 120, 620, startfunc),
         Button("End", UIfont, 200, 620, endfunc),
         Button("Forest", UIfont, 270, 620, forestfunc),
+        Button("CLEAR", UIfont, 410, 620, clearbutton),
         Button("Breadth", UIfont, 550, 620, breadthbutton),
         Button("DJ", UIfont, 675, 620, djbutton),
         Button("Greedy", UIfont, 725, 620, greedybutton),

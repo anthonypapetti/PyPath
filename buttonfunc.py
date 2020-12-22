@@ -27,3 +27,6 @@ def greedybutton():
 
 def astarbutton():
     return CellState["ASTAR"]
+
+def clearbutton():
+    return CellState["CLEAR"]

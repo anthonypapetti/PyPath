@@ -48,6 +48,9 @@ while run:
         pathfinding(mouse, grid)
         mouse.state = CellState["SEARCH_FINISHED"]
 
+    #clear grid
+    if mouse.state == CellState["CLEAR"]:
+        grid.clear()
     #drawing goes below here
     #draw cell grid
     for row in grid.cells:

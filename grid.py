@@ -20,6 +20,14 @@ class Grid():
         grid[-1][-1].image.fill(color_array[CellState(4)])
         grid[-1][-1].state = CellState(4)
         self.cells = grid
+
+    def clear(self):
+        for row in self.cells:
+            for cell in row:
+                cell.set_state(CellState["CLEAR"])
+
+        self.cells[0][0].state = self.cells[0][0].set_state(CellState["START"])
+        self.cells[len(self.cells) - 1][len(self.cells[0]) - 1].state = self.cells[len(self.cells) - 1][len(self.cells[0]) - 1].set_state(CellState["START"])
     
     #finds cost of cell at index
     def cost(self, index):
