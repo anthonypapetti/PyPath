@@ -93,8 +93,7 @@ def __djsearch(grid, start, goal):
             break
         
         #color reached cell
-        if grid.cells[current[0]][current[1]].state != CellState["START"] and grid.cells[current[0]][current[1]].state != CellState["END"]:
-            grid.cells[current[0]][current[1]].set_state(CellState["REACHED"])
+        grid.path_state(current, CellState["REACHED"])
 
         for neighbor in grid.neighbors(current):
             new_cost = cost_so_far[str(current)] + grid.cost(neighbor)
@@ -102,8 +101,7 @@ def __djsearch(grid, start, goal):
                 #add to frontier
                 frontier.put(PriorityIndex(new_cost, neighbor))
                 #color frontier
-                if grid.cells[neighbor[0]][neighbor[1]].state != CellState["START"] and grid.cells[neighbor[0]][neighbor[1]].state != CellState["END"]:
-                    grid.cells[neighbor[0]][neighbor[1]].set_state(CellState["FRONTIER"])
+                grid.path_state(neighbor, CellState["FRONTIER"])
                 #put in reference dictionaries
                 cost_so_far[str(neighbor)] = new_cost
                 came_from[str(neighbor)] = current
@@ -117,12 +115,85 @@ def __djsearch(grid, start, goal):
     path.append(start)
     path.reverse()
     for index in path:
-        if grid.cells[index[0]][index[1]].state != CellState["START"] and grid.cells[index[0]][index[1]].state != CellState["END"]:
-            grid.cells[index[0]][index[1]].set_state(CellState["PATH"])
+        grid.path_state(index, CellState["PATH"])
     return path
 
 def __greedysearch(grid, start, goal):
-    pass
+    frontier = PriorityQueue()
+    came_from = dict()
+    frontier.put(PriorityIndex(0, start))
+    came_from[str(start)] = None
+
+    #main loop
+    while not frontier.empty():
+        current = frontier.get().index
+
+        #early exit condition
+        if current == goal:
+            break
+        
+        #color reached cell
+        grid.path_state(current, CellState["REACHED"])
+
+        for neighbor in grid.neighbors(current):
+            if str(neighbor) not in came_from:
+                #add to frontier
+                priority = grid.heuristic(neighbor, goal)
+                frontier.put(PriorityIndex(priority, neighbor))
+                came_from[str(neighbor)] = current
+                #color frontier
+                grid.path_state(neighbor, CellState["FRONTIER"])
+
+    #reconstruct path
+    current = goal
+    path = []
+    while current != start:
+        path.append(list(current))
+        current = came_from[str(current)]
+    path.append(start)
+    path.reverse()
+    for index in path:
+        grid.path_state(index, CellState["PATH"])
+    return path
 
 def __astarsearch(grid, start, goal):
-    pass
+    frontier = PriorityQueue()
+    came_from = dict()
+    cost_so_far = dict()
+    frontier.put(PriorityIndex(0, start))
+    came_from[str(start)] = None
+    cost_so_far[str(start)] = 0
+
+    while not frontier.empty():
+        current = frontier.get().index
+
+    #early exit condition
+        if current == goal:
+            break
+        
+        #color reached cell
+        grid.path_state(current, CellState["REACHED"])
+
+        for neighbor in grid.neighbors(current):
+            new_cost = cost_so_far[str(current)] + grid.cost(neighbor)
+            if str(neighbor) not in cost_so_far or new_cost < cost_so_far[str(neighbor)]:
+                #add to frontier
+                priority = new_cost + grid.heuristic(neighbor, goal)
+                frontier.put(PriorityIndex(priority, neighbor))
+                #color frontier
+                grid.path_state(neighbor, CellState["FRONTIER"])
+                #put in reference dictionaries
+                cost_so_far[str(neighbor)] = new_cost
+                came_from[str(neighbor)] = current
+    
+    #reconstruct path
+    current = goal
+    path = []
+    while current != start:
+        path.append(list(current))
+        current = came_from[str(current)]
+    path.append(start)
+    path.reverse()
+    for index in path:
+        grid.path_state(index, CellState["PATH"])
+    return path

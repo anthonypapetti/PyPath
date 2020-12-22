@@ -48,6 +48,10 @@ class Grid():
     def path_state(self, index, state):
         if self.cells[index[0]][index[1]].state != CellState["START"] and self.cells[index[0]][index[1]].state != CellState["END"]:
             self.cells[index[0]][index[1]].set_state(state)
+    
+    #finds distance between given index and goal
+    def heuristic(self, index, goal):
+        return abs(index[0] - goal[0]) + abs(index[1] - goal[1])
 
 class Cell():
     def __init__(self, posx, posy):
